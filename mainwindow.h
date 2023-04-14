@@ -96,6 +96,11 @@ public slots:
   void switch_rad(int);
   void switch_ml(int);
   void switch_cu(int);
+
+  void switch_plume(int);
+  void switch_cin(int);
+  void switch_ft_storage(int);
+
   void switch_curad(int);
   void switch_wtheta(int);
   void switch_wq(int);

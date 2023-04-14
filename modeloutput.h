@@ -143,6 +143,8 @@ public:
   outputvar ac;        // cloud core fraction [-]
   outputvar M;         // mass-flux (/rho) [m s-1]
   outputvar cc;        // total cloud fraction [-]
+  outputvar w_lfc;
+  outputvar cin;
 
   // vertical profiles
   outputvar zprof;

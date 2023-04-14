@@ -74,6 +74,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   connect(ui->sw_rad,                     SIGNAL(stateChanged(int)),        this, SLOT(switch_rad(int)));
   connect(ui->sw_ml,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_ml(int)));
   connect(ui->sw_cu,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_cu(int)));
+
+  connect(ui->sw_plume,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_plume(int)));
+  connect(ui->sw_cin,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_cin(int)));
+
   connect(ui->sw_cu_rad,                  SIGNAL(stateChanged(int)),        this, SLOT(switch_curad(int)));
   connect(ui->sw_chem,                    SIGNAL(stateChanged(int)),        this, SLOT(switch_chem(int)));
   connect(ui->sw_chem_constant,           SIGNAL(stateChanged(int)),        this, SLOT(switch_chem_constant(int)));
@@ -196,6 +200,8 @@ void MainWindow::blockInput(bool check)
   ui->sw_ls->blockSignals(check);
   ui->sw_rad->blockSignals(check);
   ui->sw_ml->blockSignals(check);
+  ui->sw_plume->blockSignals(check);
+  ui->sw_cin->blockSignals(check);
   ui->sw_surface_advanced->blockSignals(check);
   ui->sw_soil_advanced->blockSignals(check);
   if (plotwindowList.size() > 0)
@@ -530,6 +536,12 @@ void MainWindow::storeFormData()
   formvalues.sw_curad   = CheckState2bool(ui->sw_cu_rad->checkState());
 
   formvalues.dFz        = ui->input_rad_dFz->text().toDouble();
+
+  formvalues.sw_plume   = CheckState2bool(ui->sw_plume->checkState());
+  formvalues.sw_cin     = CheckState2bool(ui->sw_cin->checkState());
+  formvalues.sw_ft_storage = CheckState2bool(ui->sw_ft_storage->checkState());
+  formvalues.phi_cu     = ui->input_cu_phi_cu->text().toDouble();
+  formvalues.wcld_fact  = ui->input_cu_wcld_fact->text().toDouble();
   // END TAB5
 
   // TAB6
@@ -647,6 +659,7 @@ void MainWindow::loadFormData()
     ui->sw_shearwe->setCheckState(Bool2CheckState(formvalues.sw_shearwe));
     ui->sw_cu->setCheckState(Bool2CheckState(formvalues.sw_cu));
       switch_cu(Bool2Int(formvalues.sw_cu));
+
     ui->sw_cu_rad->setCheckState(Bool2CheckState(formvalues.sw_curad));
     ui->sw_rad->setCheckState(Bool2CheckState(formvalues.sw_rad));
       switch_rad(Bool2Int(formvalues.sw_rad));
@@ -814,6 +827,9 @@ void MainWindow::loadFormData()
     ui->input_rad_clouds->setText(QString::number(formvalues.cc));
 
     ui->input_rad_dFz->setText(QString::number(formvalues.dFz));
+
+    ui->input_cu_phi_cu->setText(QString::number(formvalues.phi_cu));
+    ui->input_cu_wcld_fact->setText(QString::number(formvalues.wcld_fact));
 
     // OTHER
     ui->input_name->setText(modelrunlist->find(n).value().runname);
@@ -1206,6 +1222,12 @@ void MainWindow::saveRuns()
       out << temprun.run->input.sw_cu      << endl;
       out << temprun.run->input.sw_curad   << endl;
       out << temprun.run->input.dFz        << endl;
+
+      out << temprun.run->input.sw_plume   << endl;
+      out << temprun.run->input.sw_cin     << endl;
+      out << temprun.run->input.phi_cu     << endl;
+      out << temprun.run->input.wcld_fact  << endl;
+
       // END TAB5
 
       // TAB 6 and 7
@@ -1486,6 +1508,16 @@ void MainWindow::loadRuns()
       tempinput.sw_curad   = line.toInt();
       line = in.readLine();
       tempinput.dFz        = line.toDouble();
+
+      line = in.readLine();
+      tempinput.sw_plume     = line.toDouble();
+      line = in.readLine();
+      tempinput.sw_cin     = line.toDouble();
+
+      line = in.readLine();
+      tempinput.phi_cu     = line.toDouble();
+      line = in.readLine();
+      tempinput.wcld_fact  = line.toDouble();
 
       // END TAB5
 
@@ -1956,6 +1988,39 @@ void MainWindow::switch_cu(int state)
   ui->input_rad_clouds->setEnabled(checkstateclouds);
   ui->unitlabel_rad_clouds->setEnabled(checkstateclouds);
 
+
+  updateStatusBar();
+}
+
+void MainWindow::switch_plume(int state)
+{
+  bool checkstate;
+  if (state == Qt::Checked)
+    checkstate = true;
+  else
+    checkstate = false;
+
+  updateStatusBar();
+}
+
+void MainWindow::switch_cin(int state)
+{
+  bool checkstate;
+  if (state == Qt::Checked)
+    checkstate = true;
+  else
+    checkstate = false;
+
+  updateStatusBar();
+}
+
+void MainWindow::switch_ft_storage(int state)
+{
+  bool checkstate;
+  if (state == Qt::Checked)
+    checkstate = true;
+  else
+    checkstate = false;
 
   updateStatusBar();
 }

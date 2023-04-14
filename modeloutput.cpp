@@ -530,6 +530,19 @@ modeloutput::modeloutput(int tsteps, int nsc)
   cc.description            = "Total cloud fraction";
   cc.id                     = "cc";
 
+  w_lfc.data                = new double[tsteps];  // vertical velocity at the LFC [m s-1]
+  w_lfc.name                = "w_lfc";
+  w_lfc.unit                = "m s-\u00B9";
+  w_lfc.description         = "Vertical velocity at LFC";
+  w_lfc.id                  = "w_lfc";
+
+  cin.data                = new double[tsteps];  // CIN [m2 s-2]
+  cin.name                = "CIN";
+  cin.unit                = "..";
+  cin.description         = "Convective inhibition";
+  cin.id                  = "CIN";
+
+
   // vertical profiles
   thetaprof.data            = new double[tsteps*4];
   thetaprof.name            = "\u03B8";
@@ -738,6 +751,10 @@ void modeloutput::reset(int nsc)
   delete[] G.data;
   delete[] ac.data;
   delete[] M.data;
+
+  delete[] w_lfc.data;
+  delete[] cin.data;
+
   delete[] cc.data;
   delete[] thetaprof.data;
   delete[] wthetaprof.data;
@@ -841,7 +858,12 @@ void modeloutput::reload(int tsteps, int nsc)
   G.data                    = new double[tsteps];   // Net radiation [W m-2]
   ac.data                   = new double[tsteps];   // cloud core fraction [-]
   M.data                    = new double[tsteps];   // mass-flux (/rho) [m s-1]
+
+  w_lfc.data                = new double[tsteps];   // vertical velocity at LFC
+  cin.data                  = new double[tsteps];   // convective inhibition
+
   cc.data                   = new double[tsteps];   // total cloud fraction [-]
+
   thetaprof.data            = new double[tsteps*4];
   wthetaprof.data           = new double[tsteps*4];
   wthetavprof.data          = new double[tsteps*4];

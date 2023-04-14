@@ -26,7 +26,8 @@
 #include <iostream>
 #include <fstream>
 #include "model.h"
-
+#include "epmodel.h"
+#include "mlm_class.h"
 using namespace std;
 
 inline double sign(double n) { return n > 0 ? 1 : (n < 0 ? -1 : 0);}
@@ -396,12 +397,24 @@ void model::initmodel()
   sw_curad   = input.sw_curad;          // Link ac -> cc -> radiation
   ac         =  0.;                     // cloud core fraction [-]
   M          =  0.;                     // mass-flux (/rho) [m s-1]
+
+  // cin model
+  sw_plume   = input.sw_plume;           // get plume statistics
+  sw_cin     = input.sw_cin;             // allow CIN to reduce cumulus massflux
+  M_reduced  =  0.;                     // mass-flux (/rho) potentially reduced by CIN [m s-1]
+
   // Shallow-cumulus / variance calculations
   dz0        =  50.;                    // Lower limit dz
   dz         =  150;                    // (initial) transition layer thickness [m]
 
   // stratocumulus
   dFz        = input.dFz;               // cloud-top radiative divergence [W m-2]
+
+  phi_cu     = input.phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
+  wcld_fact  = input.wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
+
+  w_lfc      = -1;
+  cin        = -1;
 
   // chemistry
   sw_chem           = input.sw_chem;
@@ -497,6 +510,9 @@ void model::runmodel()
     if(sw_cu)
       runcumodel();
 
+    if (sw_plume)
+      getplumestats();
+
     if(sw_ml)
       runmlmodel();
 
@@ -534,8 +550,32 @@ void model::runcumodel()
     ac = 0.;
 
   cc               = 2. * ac;
-  M                = ac * wstar;
+  M                = wcld_fact * ac * wstar;
 }
+
+
+void model::getplumestats()
+{
+  mlm_class mlm;
+  mlm.initmlm();
+
+  epmodel epm;
+  epm.set_inp(mlm);
+  epm.runmodel();
+  epm.get_output();
+  w_lfc = epm.output.w_lfc;
+  cin = epm.output.cin;
+}
+
+/*
+model::runcinmodel():
+{
+ //   M_reduced = M * w_lfc / wstar;
+  M_reduced = M;
+}
+*/
+
+
 
 void model::runmlmodel()
 {
@@ -948,9 +988,7 @@ double model::ribtol(double Rib, double zsl, double z0m, double z0h)
     if(abs(L)>1e15)
       break;
   }
-
   return L;
-
 }
 
 double model::factorial(int k)
@@ -1330,6 +1368,10 @@ void model::store()
   output->cc.data[t]         = cc;
   output->M.data[t]          = M;
 
+  output->w_lfc.data[t]      = w_lfc;
+  output->cin.data[t]        = cin;
+
+
   // vertical profiles
   int startt = t * 4;
   output->thetaprof.data[startt + 0]     = output->theta.data[t];
@@ -1466,6 +1508,8 @@ void model::run2file(std::string filedir, std::string filename)
   runsave << output->wqM.name << " [" << output->wqM.unit << "],";
   runsave << output->M.name << " [" << output->M.unit << "],";
 
+  runsave << output->w_lfc.name << " [" << output->w_lfc.unit << "]";
+  runsave << output->cin.name << " [" << output->cin.unit << "]";
   int n;
 
   for(n=0; n<nsc; n++)
@@ -1554,6 +1598,9 @@ void model::run2file(std::string filedir, std::string filename)
     runsave << output->sigmaq.data[nt] << ",";
     runsave << output->wqM.data[nt] << ",";
     runsave << output->M.data[nt] << ",";
+
+    runsave << output->w_lfc.data[nt] << ",";
+    runsave << output->cin.data[nt]  << ",";
 
     for(n=0; n<nsc; n++)
     {
@@ -1653,7 +1700,6 @@ void model::runchemmodel(double chemdt)
     iterout[i] = sc[i];
     fsc[i]     = sc[i] + dsc[i];
   }
-
 
   //cout << "Running chemmodel for timestep: " << t << endl;
 

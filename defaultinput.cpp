@@ -135,9 +135,14 @@ void MainWindow::readdefaultinput()
   defaultinput.sw_cu      = false;    // shallow-cumulus switch
   defaultinput.sw_curad   = false;    // link ac -> cc -> radiation
 
+  defaultinput.sw_plume   = true;    // calculate plume statistics
+  defaultinput.sw_cin     = false;    // use CIN value from plume model for cumulus inhibition
+  defaultinput.sw_ft_storage = false;
   // stratocumulus
   defaultinput.dFz        = 0.;       // Cloud top radiative divergence (stratocumulus)
 
+  defaultinput.phi_cu     = 1.;
+  defaultinput.wcld_fact  = 1.;
   //chemistry
   defaultinput.sw_chem    = false;
   defaultinput.sw_chem_constant  = true;

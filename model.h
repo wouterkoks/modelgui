@@ -44,7 +44,7 @@ private:
 
   void runmlmodel();
   void intmlmodel();
-
+  void getplumestats();
   void runslmodel();
 
   void runradmodel();
@@ -340,6 +340,14 @@ private:
 
   // Stratocumulus
   double dFz;       // cloud-top radiative divergence [W m-2]
+
+  bool sw_plume;
+  bool sw_cin;
+  double phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
+  double wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
+  double M_reduced;
+  double w_lfc;
+  double cin;
 
   // chemistry
   modelchem *cm;

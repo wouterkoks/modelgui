@@ -153,6 +153,12 @@ modelinput::modelinput()
 
   dFz        = -1;
 
+  sw_plume   = false;
+  sw_cin     = false;
+  sw_ft_storage = false;
+  phi_cu     = -1;
+  wcld_fact  = -1;
+
   // chemistry
   sw_chem    = false;
   sw_chem_constant = false;
@@ -300,6 +306,13 @@ modelinput::modelinput(const modelinput &ref)
 
   dFz        = ref.dFz;
 
+  phi_cu     = ref.phi_cu;
+  wcld_fact  = ref.wcld_fact;
+
+  sw_plume   = ref.sw_plume;
+  sw_cin     = ref.sw_cin;
+  sw_ft_storage = ref.sw_ft_storage;
+
   // chemistry
   sw_chem      = ref.sw_chem;
   sw_chem_constant = ref.sw_chem_constant;
@@ -414,7 +427,13 @@ bool modelinput::operator!=(const modelinput &ref)
   else if(advCO2     != ref.advCO2)
     return true;          
   else if(wCO2       != ref.wCO2)
-    return true;	  
+    return true;
+
+// missing parameters!!
+  else if(sw_plume   != ref.sw_plume)
+    return true;
+  else if(sw_cin     != ref.sw_cin)
+    return true;
 
   // chemistry species :'(
   else if(nsc        != ref.nsc)
@@ -530,8 +549,18 @@ bool modelinput::operator!=(const modelinput &ref)
     return true;	  
   else if(sw_curad   != ref.sw_curad)
     return true;
+  else if(sw_plume   != ref.sw_plume)
+    return true;
+  else if(sw_cin     != ref.sw_cin)
+    return true;
+  else if(sw_ft_storage != ref.sw_ft_storage)
+    return true;
   else if(dFz        != ref.dFz)
-    return true;	  
+    return true;
+  else if(phi_cu     != ref.phi_cu)
+    return true;
+  else if(wcld_fact  != ref.wcld_fact)
+    return true;
 
   // chemistry :'(
   else if(sw_chem            != ref.sw_chem)
@@ -705,7 +734,14 @@ modelinput &modelinput::operator=(const modelinput &ref)
     sw_cu      = ref.sw_cu;
     sw_curad   = ref.sw_curad;
 
+    sw_plume   = ref.sw_plume;
+    sw_cin     = ref.sw_cin;
+    sw_ft_storage = ref.sw_ft_storage;
+
     dFz        = ref.dFz;
+
+    phi_cu     = ref.phi_cu;
+    wcld_fact  = ref.wcld_fact;
 
     // chemistry
     sw_chem    = ref.sw_chem;

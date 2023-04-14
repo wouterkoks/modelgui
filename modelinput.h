@@ -153,6 +153,13 @@ public:
 
   double dFz;       // Cloud top radiative divergence (stratocumulus)
 
+  double phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
+  double wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
+
+  bool sw_plume;
+  bool sw_cin;
+  bool sw_ft_storage;
+
   // chemistry
   bool   sw_chem;
   bool   sw_chem_constant;
