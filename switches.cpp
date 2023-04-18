@@ -135,7 +135,6 @@ void plotwindow::getdata(outputvar *data, modelrun n, QString plotvar)
 
   // mixed-layer
   if (plotvar == "t")
-    std::cout << "CHECK t";
     *data = n.run->output->t;
   else if (plotvar == "tutc")
     *data = n.run->output->tutc;
@@ -309,7 +308,6 @@ void plotwindow::getdata(outputvar *data, modelrun n, QString plotvar)
   else if (plotvar == "M")
     *data = n.run->output->M;
   else if (plotvar == "w_lfc")
-    std::cout << "CHECK W";
     *data = n.run->output->w_lfc;
   else if (plotvar == "CIN")
     *data = n.run->output->cin;
