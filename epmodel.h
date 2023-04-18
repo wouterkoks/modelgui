@@ -7,24 +7,37 @@
 #include <iterator>
 #include <string>
 
-#include "mlm_class.h"
+
 using namespace std;
 
 class epmodel {
 public:
-    epmodel();
-
     void runmodel();
-    void set_inp(mlm_class&);
-    void get_output();
-    struct output {
+
+    void init();
+    struct input_struct {
+        double Ps;
+        double dz;
+        double imax;
+        double h;
+        double theta;
+        double q;
+        double gammatheta;
+        double gammaq;
+        double theta_ft0;
+        double q_ft0;
+        double q2m;
+        double wstar;
+        double ent_corr_factor;
+    } input;
+    struct output_struct {
         double B;
         double w_lfc;
         double cin;
         double thvp;
         double thve;
     } output;
-    int imax;
+    output_struct get_output();
     struct out_z {
         std::vector<double> w;
         std::vector<double> cin;
@@ -33,9 +46,7 @@ public:
     } out_z;
     int data_zsize;
 
-
     void print_output();
-
 
 private:
     double Rd;
@@ -44,9 +55,9 @@ private:
     double cp;
     double g;
     double tv_const;
-    double p0;
+    double c1;
+    double c2;
 
-    mlm_class mlm;
     void initmodel();
     void get_env_stats();
     void calc_thermo();
@@ -62,19 +73,16 @@ private:
     double exner;
     double z;
     double dz;
-    double theta_ft0;
-    double q_ft0;
-    double gammatheta;
-    double gammaq;
+
     double ent;
     double z_lcl;
+
     bool cont_bool;
     bool parcel_dry;
     bool above_lcl;
     bool above_lfc;
     bool inhibited;
-    double c1;
-    double c2;
+
 
     struct parcel {
         double qt;
@@ -85,6 +93,7 @@ private:
         double w;
         double B;
         double cin;
+        double dw; //remove
     } parcel;
 
     struct env {
@@ -97,5 +106,6 @@ private:
 
     std::vector<bool> cond_list;
 };
+
 
 #endif

@@ -238,8 +238,8 @@ plotwindow::plotwindow(QMap<int, modelrun> *runs, QList<int> *initialselected, Q
       << modelout.M
       << modelout.w_lfc
       << modelout.cin;
-  cout << modelout.cc << endl;
-  cout << modelout.cin << endl;
+
+
   vertprof
       << modelout.thetaprof
       << modelout.wthetaprof

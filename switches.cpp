@@ -135,6 +135,7 @@ void plotwindow::getdata(outputvar *data, modelrun n, QString plotvar)
 
   // mixed-layer
   if (plotvar == "t")
+    std::cout << "CHECK t";
     *data = n.run->output->t;
   else if (plotvar == "tutc")
     *data = n.run->output->tutc;
@@ -307,6 +308,11 @@ void plotwindow::getdata(outputvar *data, modelrun n, QString plotvar)
     *data = n.run->output->cc;
   else if (plotvar == "M")
     *data = n.run->output->M;
+  else if (plotvar == "w_lfc")
+    std::cout << "CHECK W";
+    *data = n.run->output->w_lfc;
+  else if (plotvar == "CIN")
+    *data = n.run->output->cin;
 
   // vertical profiles
   else if (plotvar == "zprof")
@@ -519,6 +525,10 @@ void plotwindow::setplotvar(const QString label, QString *plotvar)
     *plotvar = label;
     else if (label == "M")
     *plotvar = label;
+    else if (label == "w_lfc")
+    *plotvar == label;
+    else if (label == "CIN")
+    *plotvar == label;
 
   // vertical profiles
   else if (label == "zprof")

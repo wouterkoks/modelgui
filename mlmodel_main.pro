@@ -17,7 +17,6 @@ SOURCES += main.cpp \
     modelinput.cpp
 HEADERS += mainwindow.h \
     epmodel.h \
-    mlm_class.h \
     modeloutput.h \
     modelinput.h \
     model.h \

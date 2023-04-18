@@ -862,6 +862,7 @@ void modeloutput::reload(int tsteps, int nsc)
   w_lfc.data                = new double[tsteps];   // vertical velocity at LFC
   cin.data                  = new double[tsteps];   // convective inhibition
 
+
   cc.data                   = new double[tsteps];   // total cloud fraction [-]
 
   thetaprof.data            = new double[tsteps*4];

@@ -23,9 +23,14 @@
  */
 
 #include <cstring>
+#include <algorithm>
+#include <iterator>
+#include <cmath>
+#include <vector>
 #include "modelinput.h"
 #include "modeloutput.h"
 #include "modelchem.h"
+#include "epmodel.h"
 
 class model
 {
@@ -36,6 +41,11 @@ public:
   modeloutput *output;
   void run2file(std::string, std::string);
   bool hasoutput;
+
+  void initmlm();
+  epmodel epm;
+  epmodel init_epmodel(epmodel epm);
+
 
 private:
   void initmodel();
@@ -348,6 +358,11 @@ private:
   double M_reduced;
   double w_lfc;
   double cin;
+  double dz_ep;  // height level thickness in entraining plume model [m]
+  int imax_ep;  // number of height levels in entraining plume model [-]
+  double ent_corr_factor_ep; // correction factor in parametrization of lateral entrainment in EP model [-]
+  double theta_ft0; // intial tropospheric theta profile extrapolated to surface [K]
+  double q_ft0;  // intial tropospheric q profile extrapolated to surface [kg kg-1]
 
   // chemistry
   modelchem *cm;
@@ -369,5 +384,8 @@ private:
   double stocoef;
   double phi;
   double k_r05;
+
+
+
 };
 

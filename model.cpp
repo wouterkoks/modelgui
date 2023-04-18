@@ -26,8 +26,8 @@
 #include <iostream>
 #include <fstream>
 #include "model.h"
-#include "epmodel.h"
-#include "mlm_class.h"
+
+
 using namespace std;
 
 inline double sign(double n) { return n > 0 ? 1 : (n < 0 ? -1 : 0);}
@@ -553,17 +553,44 @@ void model::runcumodel()
   M                = wcld_fact * ac * wstar;
 }
 
+epmodel model::init_epmodel(epmodel epm){
+  epm.input.Ps = Ps;
+  epm.input.dz = dz_ep;
+  epm.input.imax = imax_ep;
+
+  epm.input.h = h;
+  epm.input.theta = theta;
+  epm.input.q = q;
+  epm.input.theta_ft0 = theta_ft0;
+  epm.input.q_ft0 = q_ft0;
+  epm.input.gammatheta = gammatheta;
+  epm.input.gammaq = gammaq;
+  epm.input.q2m = q2m;
+
+  epm.input.wstar = wstar;
+  epm.input.ent_corr_factor = ent_corr_factor_ep;
+  return epm;
+}
 
 void model::getplumestats()
 {
-  mlm_class mlm;
-  mlm.initmlm();
+  theta_ft0 = input.theta + input.dtheta - input.gammatheta * input.h;
+  q_ft0 = input.q + input.dq - input.gammaq * input.h;
+  dz_ep = 10;
+  imax_ep = 500;
+  ent_corr_factor_ep = 0.7;
 
   epmodel epm;
-  epm.set_inp(mlm);
+
+  epm = init_epmodel(epm); // fill entries of input struct in epmodel
+  epm.init(); // use input struct to initialize model variables
+
   epm.runmodel();
-  epm.get_output();
+
   w_lfc = epm.output.w_lfc;
+  if (h > 1000){
+    w_lfc = 0.01*h;
+  }
   cin = epm.output.cin;
 }
 
