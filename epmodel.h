@@ -26,9 +26,13 @@ public:
         double gammaq;
         double theta_ft0;
         double q_ft0;
-        double q2m;
+        double sigmaq2;
         double wstar;
         double ent_corr_factor;
+        bool sw_ft_storage;
+        double hstore;
+        double Stheta;
+        double Sq;
     } input;
     struct output_struct {
         double B;

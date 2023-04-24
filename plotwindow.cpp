@@ -237,7 +237,9 @@ plotwindow::plotwindow(QMap<int, modelrun> *runs, QList<int> *initialselected, Q
       << modelout.cc
       << modelout.M
       << modelout.w_lfc
-      << modelout.cin;
+      << modelout.cin
+      << modelout.Stheta
+      << modelout.Sq;
 
 
   vertprof

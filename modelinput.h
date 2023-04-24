@@ -155,7 +155,7 @@ public:
 
   double phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
   double wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
-
+  double hstore;    // Depth of layer where tropospheric storage accumulates [m]
   bool sw_plume;
   bool sw_cin;
   bool sw_ft_storage;

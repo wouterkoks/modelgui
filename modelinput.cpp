@@ -158,6 +158,7 @@ modelinput::modelinput()
   sw_ft_storage = false;
   phi_cu     = -1;
   wcld_fact  = -1;
+  hstore     = -1;
 
   // chemistry
   sw_chem    = false;
@@ -308,7 +309,7 @@ modelinput::modelinput(const modelinput &ref)
 
   phi_cu     = ref.phi_cu;
   wcld_fact  = ref.wcld_fact;
-
+  hstore     = ref.hstore;
   sw_plume   = ref.sw_plume;
   sw_cin     = ref.sw_cin;
   sw_ft_storage = ref.sw_ft_storage;
@@ -561,6 +562,8 @@ bool modelinput::operator!=(const modelinput &ref)
     return true;
   else if(wcld_fact  != ref.wcld_fact)
     return true;
+  else if(hstore     != ref.hstore)
+    return true;
 
   // chemistry :'(
   else if(sw_chem            != ref.sw_chem)
@@ -742,6 +745,7 @@ modelinput &modelinput::operator=(const modelinput &ref)
 
     phi_cu     = ref.phi_cu;
     wcld_fact  = ref.wcld_fact;
+    hstore     = ref.hstore;
 
     // chemistry
     sw_chem    = ref.sw_chem;

@@ -75,8 +75,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   connect(ui->sw_ml,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_ml(int)));
   connect(ui->sw_cu,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_cu(int)));
 
-  connect(ui->sw_plume,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_plume(int)));
-  connect(ui->sw_cin,                      SIGNAL(stateChanged(int)),        this, SLOT(switch_cin(int)));
+  connect(ui->sw_plume,                   SIGNAL(stateChanged(int)),        this, SLOT(switch_plume(int)));
+  connect(ui->sw_cin,                     SIGNAL(stateChanged(int)),        this, SLOT(switch_cin(int)));
+  connect(ui->sw_ft_storage,              SIGNAL(stateChanged(int)),        this, SLOT(switch_cin(int)));
 
   connect(ui->sw_cu_rad,                  SIGNAL(stateChanged(int)),        this, SLOT(switch_curad(int)));
   connect(ui->sw_chem,                    SIGNAL(stateChanged(int)),        this, SLOT(switch_chem(int)));
@@ -202,6 +203,7 @@ void MainWindow::blockInput(bool check)
   ui->sw_ml->blockSignals(check);
   ui->sw_plume->blockSignals(check);
   ui->sw_cin->blockSignals(check);
+  ui->sw_ft_storage->blockSignals(check);
   ui->sw_surface_advanced->blockSignals(check);
   ui->sw_soil_advanced->blockSignals(check);
   if (plotwindowList.size() > 0)
@@ -542,6 +544,7 @@ void MainWindow::storeFormData()
   formvalues.sw_ft_storage = CheckState2bool(ui->sw_ft_storage->checkState());
   formvalues.phi_cu     = ui->input_cu_phi_cu->text().toDouble();
   formvalues.wcld_fact  = ui->input_cu_wcld_fact->text().toDouble();
+  formvalues.hstore     = ui->input_cu_hstore->text().toDouble();
   // END TAB5
 
   // TAB6
@@ -659,6 +662,12 @@ void MainWindow::loadFormData()
     ui->sw_shearwe->setCheckState(Bool2CheckState(formvalues.sw_shearwe));
     ui->sw_cu->setCheckState(Bool2CheckState(formvalues.sw_cu));
       switch_cu(Bool2Int(formvalues.sw_cu));
+    ui->sw_plume->setCheckState(Bool2CheckState(formvalues.sw_plume));
+    switch_plume(Bool2Int(formvalues.sw_plume));
+    ui->sw_cin->setCheckState(Bool2CheckState(formvalues.sw_cin));
+    switch_cin(Bool2Int(formvalues.sw_cin));
+    ui->sw_ft_storage->setCheckState(Bool2CheckState(formvalues.sw_ft_storage));
+    switch_ft_storage(Bool2Int(formvalues.sw_ft_storage));
 
     ui->sw_cu_rad->setCheckState(Bool2CheckState(formvalues.sw_curad));
     ui->sw_rad->setCheckState(Bool2CheckState(formvalues.sw_rad));
@@ -830,6 +839,7 @@ void MainWindow::loadFormData()
 
     ui->input_cu_phi_cu->setText(QString::number(formvalues.phi_cu));
     ui->input_cu_wcld_fact->setText(QString::number(formvalues.wcld_fact));
+    ui->input_cu_hstore->setText(QString::number(formvalues.hstore));
 
     // OTHER
     ui->input_name->setText(modelrunlist->find(n).value().runname);
@@ -1224,9 +1234,11 @@ void MainWindow::saveRuns()
       out << temprun.run->input.dFz        << endl;
 
       out << temprun.run->input.sw_plume   << endl;
+      out << temprun.run->input.sw_ft_storage   << endl;
       out << temprun.run->input.sw_cin     << endl;
       out << temprun.run->input.phi_cu     << endl;
       out << temprun.run->input.wcld_fact  << endl;
+      out << temprun.run->input.hstore     << endl;
 
       // END TAB5
 
@@ -1513,11 +1525,15 @@ void MainWindow::loadRuns()
       tempinput.sw_plume     = line.toDouble();
       line = in.readLine();
       tempinput.sw_cin     = line.toDouble();
+      line = in.readLine();
+      tempinput.sw_ft_storage     = line.toDouble();
 
       line = in.readLine();
       tempinput.phi_cu     = line.toDouble();
       line = in.readLine();
       tempinput.wcld_fact  = line.toDouble();
+      line = in.readLine();
+      tempinput.hstore  = line.toDouble();
 
       // END TAB5
 

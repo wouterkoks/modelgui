@@ -143,8 +143,10 @@ public:
   outputvar ac;        // cloud core fraction [-]
   outputvar M;         // mass-flux (/rho) [m s-1]
   outputvar cc;        // total cloud fraction [-]
-  outputvar w_lfc;
-  outputvar cin;
+  outputvar w_lfc;     // vertical velocity at LFC [m s-1]
+  outputvar cin;       // Convective inhibition [m2 s-2]
+  outputvar Stheta;    // Storage of theta in free troposphere [K m]
+  outputvar Sq;        // Storage of q in free troposphere [K kg kg-1]
 
   // vertical profiles
   outputvar zprof;

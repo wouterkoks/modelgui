@@ -41,7 +41,7 @@ void epmodel::init(){
     env.thl = input.theta;
     env.qt = input.q;
 
-    parcel.qt = input.q + 0.51 * sqrt(input.q2m);
+    parcel.qt = input.q + 0.51 * sqrt(input.sigmaq2);
     parcel.thl = input.theta;
     parcel.w = input.wstar;
     parcel.cin = 0;
@@ -76,6 +76,12 @@ void epmodel::get_env_stats() {
     else {
         env.thl = input.theta_ft0 + input.gammatheta * z;
         env.qt  = input.q_ft0     + input.gammaq     * z;
+        if (input.sw_ft_storage) {
+            if (z < input.h + input.hstore) {
+                env.thl += input.Stheta / input.hstore;
+                env.qt  += input.Sq     / input.hstore;
+            }
+        }
     }
     calc_pres();
     env.temp = exner * env.thl;

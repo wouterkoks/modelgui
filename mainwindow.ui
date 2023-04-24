@@ -41,8 +41,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>20</x>
+      <y>20</y>
       <width>541</width>
       <height>541</height>
      </rect>
@@ -72,7 +72,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plume&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="generalTab">
      <attribute name="title">
@@ -4197,8 +4197,8 @@
         <rect>
          <x>10</x>
          <y>61</y>
-         <width>231</width>
-         <height>71</height>
+         <width>211</width>
+         <height>88</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="cu_parameters">
@@ -4236,21 +4236,8 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="unitlabel_cu_wcld_fact">
-          <property name="toolTip">
-           <string/>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;[-]&lt;/html&gt;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="input_cu_wcld_fact">
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="input_cu_phi_cu">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -4270,10 +4257,36 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>ratio between cloud vertical velocity and Deardorff velocity</string>
+           <string>scaling factor for cumulus moisture flux (Van Stratum (2014))</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLabel" name="unitlabel_cu_phi_cu">
+          <property name="toolTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;[-]&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="unitlabel_cu_wcld_fact">
+          <property name="toolTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;[-]&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -4308,21 +4321,8 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="unitlabel_cu_phi_cu">
-          <property name="toolTip">
-           <string/>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;[-]&lt;/html&gt;</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="input_cu_phi_cu">
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="input_cu_wcld_fact">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -4342,7 +4342,79 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>scaling factor for cumulus moisture flux</string>
+           <string>ratio between cloud vertical velocity and Deardorff velocity</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="input_cu_hstore">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>70</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>70</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>depth of layer in which cloud mass-flux is stored</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="unitlabel_cu_wcld_fact_2">
+          <property name="toolTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;[m]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_cu_phi_cu_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>55</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>55</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string/>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;h&lt;span style=&quot; vertical-align:sub;&quot;&gt;store&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -4355,51 +4427,82 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>10</y>
+         <y>30</y>
          <width>251</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>Shallow cumulus dynamics parametrization</string>
+        <string>Shallow cumulus dynamics parameters</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </widget>
-     <widget class="QLineEdit" name="input_rad_dFz_2">
+     <widget class="QGroupBox" name="rad_group_4">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>360</y>
-        <width>70</width>
-        <height>28</height>
+        <x>-30</x>
+        <y>300</y>
+        <width>301</width>
+        <height>181</height>
        </rect>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+      <property name="title">
+       <string/>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>70</width>
-        <height>0</height>
-       </size>
+      <widget class="QWidget" name="gridLayoutWidget_21">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>191</width>
+         <height>111</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="rad_grid1_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="sw_cin">
+          <property name="text">
+           <string>CIN feedback</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="sw_plume">
+          <property name="text">
+           <string>Entraining plume statistics</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="sw_ft_storage">
+          <property name="text">
+           <string>Tropospheric storage</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>280</y>
+        <width>251</width>
+        <height>16</height>
+       </rect>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>70</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string>Cloud top radiative divergence</string>
+      <property name="text">
+       <string>Entraining plume model</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
@@ -9388,50 +9491,6 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="PlumeTab">
-     <attribute name="title">
-      <string>Page</string>
-     </attribute>
-     <widget class="QCheckBox" name="sw_plume">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>201</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Entraining plume model </string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="sw_cin">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>50</y>
-        <width>171</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>CIN feedback</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="sw_ft_storage">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>70</y>
-        <width>171</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Tropospheric storage</string>
-      </property>
-     </widget>
-    </widget>
    </widget>
    <widget class="QGroupBox" name="modelrunsGroup">
     <property name="geometry">
@@ -9662,7 +9721,7 @@
      <x>0</x>
      <y>0</y>
      <width>725</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

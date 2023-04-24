@@ -536,12 +536,23 @@ modeloutput::modeloutput(int tsteps, int nsc)
   w_lfc.description         = "Vertical velocity at LFC";
   w_lfc.id                  = "w_lfc";
 
-  cin.data                = new double[tsteps];  // CIN [m2 s-2]
-  cin.name                = "CIN";
-  cin.unit                = "..";
-  cin.description         = "Convective inhibition";
-  cin.id                  = "CIN";
+  cin.data                  = new double[tsteps];  // CIN [m2 s-2]
+  cin.name                  = "CIN";
+  cin.unit                  = "ms-1";
+  cin.description           = "Convective inhibition";
+  cin.id                    = "CIN";
 
+  Stheta.data               = new double[tsteps];  // Free tropospheric storage of theta
+  Stheta.name               = "Stheta";
+  Stheta.unit               = "K m";
+  Stheta.description        = "Storage of theta in free troposphere";
+  Stheta.id                 = "Stheta";
+
+  Sq.data                  = new double[tsteps];  // Free tropospheric storage of q
+  Sq.name                  = "Sq";
+  Sq.unit                  = "K kg kg-1";
+  Sq.description           = "Storage of q in free troposphere";
+  Sq.id                    = "Sq";
 
   // vertical profiles
   thetaprof.data            = new double[tsteps*4];
@@ -754,6 +765,8 @@ void modeloutput::reset(int nsc)
 
   delete[] w_lfc.data;
   delete[] cin.data;
+  delete[] Stheta.data;
+  delete[] Sq.data;
 
   delete[] cc.data;
   delete[] thetaprof.data;
@@ -859,9 +872,10 @@ void modeloutput::reload(int tsteps, int nsc)
   ac.data                   = new double[tsteps];   // cloud core fraction [-]
   M.data                    = new double[tsteps];   // mass-flux (/rho) [m s-1]
 
-  w_lfc.data                = new double[tsteps];   // vertical velocity at LFC
-  cin.data                  = new double[tsteps];   // convective inhibition
-
+  w_lfc.data                = new double[tsteps];   // vertical velocity at LFC [m s-1]
+  cin.data                  = new double[tsteps];   // convective inhibition [m2 s-2]
+  Stheta.data               = new double[tsteps];   // free tropospheric storage of theta [K m]
+  Sq.data                   = new double[tsteps];   // free tropospheric storage of q [m kg kg-1]
 
   cc.data                   = new double[tsteps];   // total cloud fraction [-]
 

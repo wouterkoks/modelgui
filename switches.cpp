@@ -311,6 +311,10 @@ void plotwindow::getdata(outputvar *data, modelrun n, QString plotvar)
     *data = n.run->output->w_lfc;
   else if (plotvar == "CIN")
     *data = n.run->output->cin;
+  else if (plotvar == "Stheta")
+    *data = n.run->output->Stheta;
+  else if (plotvar == "Sq")
+    *data = n.run->output->Sq;
 
   // vertical profiles
   else if (plotvar == "zprof")
@@ -524,9 +528,13 @@ void plotwindow::setplotvar(const QString label, QString *plotvar)
     else if (label == "M")
     *plotvar = label;
     else if (label == "w_lfc")
-    *plotvar == label;
+    *plotvar = label;
     else if (label == "CIN")
-    *plotvar == label;
+    *plotvar = label;
+    else if (label == "Stheta")
+    *plotvar = label;
+    else if (label == "Sq")
+    *plotvar = label;
 
   // vertical profiles
   else if (label == "zprof")

@@ -44,7 +44,7 @@ public:
 
   void initmlm();
   epmodel epm;
-  epmodel init_epmodel(epmodel epm);
+  epmodel init_epmodel();
 
 
 private:
@@ -216,7 +216,7 @@ private:
   double *sctend, *dsctend;
 
   double htend;
-  double thetatend, qtend, utend, vtend, scatend, CO2tend;
+  double thetatend, qtend, utend, vtend, scatend, CO2tend, Sthetatend, Sqtend;
   double dthetatend, dqtend, dutend, dvtend, dscatend, dCO2tend, dztend;
 
   // surface layer variables
@@ -355,7 +355,6 @@ private:
   bool sw_cin;
   double phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
   double wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
-  double M_reduced;
   double w_lfc;
   double cin;
   double dz_ep;  // height level thickness in entraining plume model [m]
@@ -363,6 +362,12 @@ private:
   double ent_corr_factor_ep; // correction factor in parametrization of lateral entrainment in EP model [-]
   double theta_ft0; // intial tropospheric theta profile extrapolated to surface [K]
   double q_ft0;  // intial tropospheric q profile extrapolated to surface [kg kg-1]
+
+  // tropospheric storage of cumulus mass-flux
+  bool sw_ft_storage;
+  double hstore;
+  double Stheta;
+  double Sq;
 
   // chemistry
   modelchem *cm;

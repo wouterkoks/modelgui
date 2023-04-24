@@ -401,7 +401,6 @@ void model::initmodel()
   // cin model
   sw_plume   = input.sw_plume;           // get plume statistics
   sw_cin     = input.sw_cin;             // allow CIN to reduce cumulus massflux
-  M_reduced  =  0.;                     // mass-flux (/rho) potentially reduced by CIN [m s-1]
 
   // Shallow-cumulus / variance calculations
   dz0        =  50.;                    // Lower limit dz
@@ -411,10 +410,17 @@ void model::initmodel()
   dFz        = input.dFz;               // cloud-top radiative divergence [W m-2]
 
   phi_cu     = input.phi_cu;    // Scaling parameter for cumulus moisture flux (Van Stratum 2014) [-]
-  wcld_fact  = input.wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when plume model is turned off) [-]
+
+  wcld_fact  = input.wcld_fact; // Ratio of cloud vertical velocity to Deardorff velocity scale (only used when CIN model is turned off) [-]
 
   w_lfc      = -1;
   cin        = -1;
+
+  // tropospheric storage
+  sw_ft_storage = input.sw_ft_storage;
+  hstore     = input.hstore;
+  Stheta    = 0.;
+  Sq        = 0.;
 
   // chemistry
   sw_chem           = input.sw_chem;
@@ -438,7 +444,6 @@ void model::initmodel()
 
   //for(int i=0; i<input.rsize; i++)
   //  reactions[i] = input.reactions[i];
-
 
   // initialize time variables
   tsteps = int(runtime / dt) + 1;
@@ -507,11 +512,14 @@ void model::runmodel()
     if(sw_ls)
       runlsmodel();
 
-    if(sw_cu)
-      runcumodel();
 
     if (sw_plume)
+    {
       getplumestats();
+    }
+
+    if(sw_cu)
+      runcumodel();
 
     if(sw_ml)
       runmlmodel();
@@ -550,10 +558,15 @@ void model::runcumodel()
     ac = 0.;
 
   cc               = 2. * ac;
-  M                = wcld_fact * ac * wstar;
+  if (sw_cin && sw_plume){
+    M = ac * w_lfc;
+  } else {
+    M = wcld_fact * ac * wstar;
+  }
 }
 
-epmodel model::init_epmodel(epmodel epm){
+epmodel model::init_epmodel(){
+  epmodel epm;
   epm.input.Ps = Ps;
   epm.input.dz = dz_ep;
   epm.input.imax = imax_ep;
@@ -565,43 +578,33 @@ epmodel model::init_epmodel(epmodel epm){
   epm.input.q_ft0 = q_ft0;
   epm.input.gammatheta = gammatheta;
   epm.input.gammaq = gammaq;
-  epm.input.q2m = q2m;
+  epm.input.sigmaq2 = sigmaq2;
 
   epm.input.wstar = wstar;
   epm.input.ent_corr_factor = ent_corr_factor_ep;
+
+  epm.input.sw_ft_storage = sw_ft_storage;
+  epm.input.hstore = hstore;
+  epm.input.Stheta = Stheta;
+  epm.input.Sq = Sq;
   return epm;
 }
 
 void model::getplumestats()
 {
-  theta_ft0 = input.theta + input.dtheta - input.gammatheta * input.h;
+  theta_ft0 = input.theta + input.dtheta - input.gammatheta * input.h;  // put this in the initialization of model
   q_ft0 = input.q + input.dq - input.gammaq * input.h;
   dz_ep = 10;
   imax_ep = 500;
   ent_corr_factor_ep = 0.7;
 
-  epmodel epm;
-
-  epm = init_epmodel(epm); // fill entries of input struct in epmodel
-  epm.init(); // use input struct to initialize model variables
-
+  epm = init_epmodel(); // fill entries of input struct in epmodel
+  epm.init();           // use input struct to initialize model variables
   epm.runmodel();
 
   w_lfc = epm.output.w_lfc;
-  if (h > 1000){
-    w_lfc = 0.01*h;
-  }
   cin = epm.output.cin;
 }
-
-/*
-model::runcinmodel():
-{
- //   M_reduced = M * w_lfc / wstar;
-  M_reduced = M;
-}
-*/
-
 
 
 void model::runmlmodel()
@@ -701,6 +704,7 @@ void model::runmlmodel()
 
   // Mass-flux kinematic fluxes
   // Only apply mass-flux if jump is negative
+
   wqM         = M * pow(sigmaq2,0.5);
   if (dsca < 0.)
     wscaM     = M * pow(sigmasca2,0.5);
@@ -712,6 +716,14 @@ void model::runmlmodel()
   else
     wCO2M     = 0.;
 
+  if (sw_ft_storage && M > 0) {
+    Sthetatend = - M * dtheta - (we - M) * Stheta / hstore;
+    Sqtend = M * (phi_cu * sqrt(sigmaq2) - dq) - (we - M) * Sq / hstore;
+  } else {
+    Sthetatend = 0;
+    Sqtend = 0;
+  }
+
   htend       = we + ws + wf - M;
 
   thetatend   = (wtheta + wthetae - wthetaM)  / h + advtheta;
@@ -719,8 +731,8 @@ void model::runmlmodel()
   scatend     = (wsca   + wscae   - wscaM)    / h + advsca;
   CO2tend     = (wCO2   + wCO2e   - wCO2M)    / h + advCO2;
 
-  dthetatend  = gammatheta * (we + wf - M) - thetatend  + C_thetaft;
-  dqtend      = gammaq     * (we + wf - M) - qtend      + C_qft;
+  dthetatend  = gammatheta * (we + wf - M) - thetatend  + C_thetaft + Sthetatend / hstore;
+  dqtend      = gammaq     * (we + wf - M) - qtend      + C_qft + Sqtend / hstore;
   dscatend    = gammasca   * (we + wf - M) - scatend    + C_scaft;
   dCO2tend    = gammaCO2   * (we + wf - M) - CO2tend    + C_CO2ft;
 
@@ -875,6 +887,9 @@ void model::intmlmodel()
   dsca     = dsca0   + dt * dscatend;
   CO2      = CO20    + dt * CO2tend;
   dCO2     = dCO20   + dt * dCO2tend;
+  Stheta  += dt * Sthetatend;
+
+  Sq      += dt * Sqtend;
 
   dz       = dz00    + dt * dztend;
   if(dz<dz0)  // fixed lower limit dz
@@ -1397,7 +1412,8 @@ void model::store()
 
   output->w_lfc.data[t]      = w_lfc;
   output->cin.data[t]        = cin;
-
+  output->Stheta.data[t]     = Stheta;
+  output->Sq.data[t]         = Sq;
 
   // vertical profiles
   int startt = t * 4;
@@ -1537,6 +1553,8 @@ void model::run2file(std::string filedir, std::string filename)
 
   runsave << output->w_lfc.name << " [" << output->w_lfc.unit << "]";
   runsave << output->cin.name << " [" << output->cin.unit << "]";
+  runsave << output->Stheta.name << " [" << output->Stheta.unit << "]";
+  runsave << output->Sq.name << " [" << output->Sq.unit << "]";
   int n;
 
   for(n=0; n<nsc; n++)
@@ -1628,6 +1646,8 @@ void model::run2file(std::string filedir, std::string filename)
 
     runsave << output->w_lfc.data[nt] << ",";
     runsave << output->cin.data[nt]  << ",";
+    runsave << output->Stheta.data[nt] << ",";
+    runsave << output-> Sq.data[nt] << ",";
 
     for(n=0; n<nsc; n++)
     {
