@@ -33,6 +33,7 @@ public:
         double hstore;
         double Stheta;
         double Sq;
+        double phi_cu;
     } input;
     struct output_struct {
         double B;
@@ -40,6 +41,7 @@ public:
         double cin;
         double thvp;
         double thve;
+        bool inhibited;
     } output;
     output_struct get_output();
     struct out_z {

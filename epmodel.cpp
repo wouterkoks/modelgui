@@ -21,9 +21,6 @@ double epmodel::calc_sat(double temp, double pref) {
 }
 
 
-
-
-
 void epmodel::init(){
     Rd = 287;
     Rv = 461.5;
@@ -41,11 +38,15 @@ void epmodel::init(){
     env.thl = input.theta;
     env.qt = input.q;
 
-    parcel.qt = input.q + 0.51 * sqrt(input.sigmaq2);
+    parcel.qt = input.q + input.phi_cu * sqrt(input.sigmaq2);
     parcel.thl = input.theta;
     parcel.w = input.wstar;
     parcel.cin = 0;
     parcel.B = 0;
+
+    inhibited = false;
+    above_lfc = false;
+    above_lcl = false;
 }
 
 void epmodel::runmodel(){
@@ -61,7 +62,7 @@ void epmodel::runmodel(){
         cont_bool = check_if_stop(); // check if the simulation can stop
         if (!cont_bool) {
             data_zsize = i;  // size of vertical profile data
-            output_struct output_inst = get_output();
+            output = get_output();
             break;
         }
         save_zstep();  // save data of current height level to create vertical profile
@@ -139,10 +140,6 @@ void epmodel::calc_w() {
     parcel.B    = g * (parcel.thv - env.thv) / env.thv;
     parcel.w   += input.dz * (- c1 * ent * parcel.w + c2 * parcel.B / parcel.w);
     parcel.cin -= parcel.B * input.dz;
-    if ((z > 400) and (z < 410)) {
-        cout << z << endl;
-        cout << env.thv << endl;
-    }
 }
 
 bool epmodel::check_if_stop() {
@@ -153,24 +150,28 @@ bool epmodel::check_if_stop() {
             z_lcl = z;
         }
     }
-    if (!above_lfc) {
-        above_lfc = (above_lcl && (parcel.thv > env.thv) && (z > input.h));
-    }
+
+    above_lfc = (above_lcl && (parcel.thv > env.thv) && (z > input.h));
+
     if (parcel.w < 0) {
         parcel.w = 0;
         inhibited = true;
     }
+
     cond_list = {inhibited, above_lfc}; // list of reasons to stop the loop
     cont_bool = find(begin(cond_list), end(cond_list), true) == end(cond_list);
+
     return cont_bool;
 }
 
 epmodel::output_struct epmodel::get_output() {
     // save resulting vertical velocity etc.
+    output_struct output;
     output.w_lfc = parcel.w;
     output.cin = parcel.cin;
     output.thvp = parcel.thv;
     output.thve = env.thv;
+    output.inhibited = inhibited;
     return output;
 }
 

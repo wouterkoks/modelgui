@@ -587,6 +587,7 @@ epmodel model::init_epmodel(){
   epm.input.hstore = hstore;
   epm.input.Stheta = Stheta;
   epm.input.Sq = Sq;
+  epm.input.phi_cu = phi_cu;
   return epm;
 }
 
@@ -601,7 +602,6 @@ void model::getplumestats()
   epm = init_epmodel(); // fill entries of input struct in epmodel
   epm.init();           // use input struct to initialize model variables
   epm.runmodel();
-
   w_lfc = epm.output.w_lfc;
   cin = epm.output.cin;
 }
@@ -705,7 +705,7 @@ void model::runmlmodel()
   // Mass-flux kinematic fluxes
   // Only apply mass-flux if jump is negative
 
-  wqM         = M * pow(sigmaq2,0.5);
+  wqM         = phi_cu * M * pow(sigmaq2,0.5);
   if (dsca < 0.)
     wscaM     = M * pow(sigmasca2,0.5);
   else
