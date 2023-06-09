@@ -8,7 +8,6 @@
 #include <tuple>
 
 #include "model.h"
-
 #include "epmodel.h"
 
 using namespace std;
@@ -137,6 +136,7 @@ void epmodel::entrainment() {
 }
 
 void epmodel::calc_w() {
+    // calculate vertical velocity based on constants from Simpson and Wiggert (1969), Jakob and Siebesma (2003)
     parcel.B    = g * (parcel.thv - env.thv) / env.thv;
     parcel.w   += input.dz * (- c1 * ent * parcel.w + c2 * parcel.B / parcel.w);
     parcel.cin -= parcel.B * input.dz;
@@ -150,17 +150,14 @@ bool epmodel::check_if_stop() {
             z_lcl = z;
         }
     }
-
     above_lfc = (above_lcl && (parcel.thv > env.thv) && (z > input.h));
 
     if (parcel.w < 0) {
         parcel.w = 0;
         inhibited = true;
     }
-
     cond_list = {inhibited, above_lfc}; // list of reasons to stop the loop
-    cont_bool = find(begin(cond_list), end(cond_list), true) == end(cond_list);
-
+    cont_bool = find(begin(cond_list), end(cond_list), true) == end(cond_list);  // boolean that determines whether simulation should continue
     return cont_bool;
 }
 
